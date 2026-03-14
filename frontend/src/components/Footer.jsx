@@ -34,7 +34,7 @@ const Footer = () => {
               Adresse
             </h4>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Marktstraße 103<br />
+              Marktstraße 130<br />
               20357 Hamburg
             </p>
           </div>

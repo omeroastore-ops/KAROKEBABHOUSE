@@ -52,6 +52,9 @@ const Header = () => {
             <button onClick={() => scrollToSection('about')} className="text-white hover:text-orange-500 transition-colors font-semibold">
               Über Uns
             </button>
+            <button onClick={() => scrollToSection('gallery')} className="text-white hover:text-orange-500 transition-colors font-semibold">
+              Galerie
+            </button>
             <button onClick={() => scrollToSection('hours')} className="text-white hover:text-orange-500 transition-colors font-semibold">
               Öffnungszeiten
             </button>
@@ -87,6 +90,9 @@ const Header = () => {
             </button>
             <button onClick={() => scrollToSection('about')} className="block w-full text-left text-white hover:text-orange-500 transition-colors font-semibold py-2">
               Über Uns
+            </button>
+            <button onClick={() => scrollToSection('gallery')} className="block w-full text-left text-white hover:text-orange-500 transition-colors font-semibold py-2">
+              Galerie
             </button>
             <button onClick={() => scrollToSection('hours')} className="block w-full text-left text-white hover:text-orange-500 transition-colors font-semibold py-2">
               Öffnungszeiten

@@ -2,9 +2,9 @@ import React from 'react';
 import { MapPin, Phone, Navigation } from 'lucide-react';
 
 const Location = () => {
-  const address = 'Marktstraße 103, 20357 Hamburg';
+  const address = 'Marktstraße 130, 20357 Hamburg';
   const phone = '040 30387414';
-  const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=Marktstraße+103+20357+Hamburg';
+  const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=Marktstraße+130+20357+Hamburg';
 
   return (
     <section id="location" className="py-20 md:py-32 bg-black">
@@ -67,7 +67,7 @@ const Location = () => {
             {/* Google Maps Embed */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-orange-500/30 h-[400px] md:h-full min-h-[400px]">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2369.3076891234!2d9.967089!3d53.559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b18f1b1b1b1b1b%3A0x1b1b1b1b1b1b1b1b!2sMarktstra%C3%9Fe%20103%2C%2020357%20Hamburg!5e0!3m2!1sde!2sde!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2369.3076891234!2d9.967089!3d53.559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b18f1b1b1b1b1b%3A0x1b1b1b1b1b1b1b1b!2sMarktstra%C3%9Fe%20130%2C%2020357%20Hamburg!5e0!3m2!1sde!2sde!4v1234567890"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

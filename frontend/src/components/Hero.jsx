@@ -50,7 +50,7 @@ const Hero = () => {
 
             {/* Location Badge */}
             <div className="mt-8 inline-block bg-black/50 backdrop-blur-sm px-6 py-3 rounded-full">
-              <p className="text-white font-semibold">📍 Marktstraße 103, Hamburg</p>
+              <p className="text-white font-semibold">📍 Marktstraße 130, Hamburg</p>
             </div>
           </div>
 
