@@ -12,17 +12,16 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-2xl urban-heading">K</span>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold urban-heading text-white leading-tight">
-                  KARO KEBAB
-                </h3>
-                <p className="text-orange-500 text-xs font-semibold">HOUSE</p>
-              </div>
-            </div>
+            <button 
+              onClick={scrollToTop}
+              className="mb-4 hover:opacity-80 transition-opacity"
+            >
+              <img
+                src="https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/jrzmw4bv_Schermafbeelding%202026-03-14%20182812.png"
+                alt="Karo Kebab House Logo"
+                className="h-20 w-auto object-contain"
+              />
+            </button>
             <p className="text-gray-400 text-sm">
               Frisch. Heiß. Direkt vom Grill.
             </p>

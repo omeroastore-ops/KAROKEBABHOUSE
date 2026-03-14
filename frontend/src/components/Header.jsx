@@ -30,17 +30,16 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-2xl urban-heading">K</span>
-            </div>
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold urban-heading text-white leading-tight">
-                KARO KEBAB
-              </h1>
-              <p className="text-orange-500 text-xs font-semibold">HOUSE</p>
-            </div>
-          </div>
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center hover:opacity-80 transition-opacity"
+          >
+            <img
+              src="https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/jrzmw4bv_Schermafbeelding%202026-03-14%20182812.png"
+              alt="Karo Kebab House Logo"
+              className="h-16 md:h-20 w-auto object-contain"
+            />
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
