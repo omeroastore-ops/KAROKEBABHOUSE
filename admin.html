@@ -6,125 +6,681 @@
   <title>Karo Kebab Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body{
-      font-family:Arial,sans-serif;
-      background:#111;
-      color:#fff;
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: white;
     }
-    .box{
-      width:340px;
-      background:#1c1c1c;
-      border-radius:12px;
-      padding:30px;
-      box-shadow:0 0 20px rgba(0,0,0,.35);
+    .page {
+      min-height: 100vh;
+      padding: 24px;
     }
-    h2,h1{margin-top:0}
-    input{
-      width:100%;
-      box-sizing:border-box;
-      padding:12px;
-      margin-top:10px;
-      border:none;
-      border-radius:8px;
-      font-size:16px;
+    .center-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
-    button{
-      width:100%;
-      margin-top:14px;
-      padding:12px;
-      border:none;
-      border-radius:8px;
-      background:#ff7a00;
-      color:#fff;
-      font-weight:bold;
-      font-size:16px;
-      cursor:pointer;
+    .card {
+      background: #1c1c1c;
+      border: 1px solid #2d2d2d;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 0 20px rgba(0,0,0,.3);
     }
-    button:hover{background:#ff922e}
-    #status{
-      margin-top:12px;
-      min-height:24px;
-      color:#ffb15c;
-      font-size:14px;
-      white-space:pre-wrap;
+    .login-card {
+      width: 360px;
+      max-width: 100%;
     }
-    #dashboard{display:none;text-align:center}
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #111;
+      color: white;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #ff7a00;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #ff9500;
+    }
+    button.secondary {
+      background: #2c2c2c;
+    }
+    button.secondary:hover {
+      background: #3a3a3a;
+    }
+    button.danger {
+      background: #b42318;
+    }
+    button.danger:hover {
+      background: #d92d20;
+    }
+    #status {
+      margin-top: 12px;
+      min-height: 22px;
+      color: #ffb15c;
+      white-space: pre-wrap;
+      font-size: 14px;
+    }
+    #dashboard {
+      display: none;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .full {
+      grid-column: 1 / -1;
+    }
+    .list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .item {
+      background: #151515;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: block;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .muted {
+      color: #b8b8b8;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    .section-title {
+      margin-bottom: 8px;
+      color: #ffb15c;
+    }
+    .spacer {
+      height: 6px;
+    }
+    @media (max-width: 900px) {
+      .grid, .row {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div id="loginBox" class="box">
-    <h2>Admin Login</h2>
-    <input id="email" type="email" placeholder="E-Mail" />
-    <input id="password" type="password" placeholder="Passwort" />
-    <button id="loginBtn" type="button">Einloggen</button>
-    <p id="status">Seite geladen...</p>
+  <div id="loginView" class="center-wrap">
+    <div class="card login-card">
+      <h2>Admin Login</h2>
+      <input id="email" type="email" placeholder="E-Mail" />
+      <input id="password" type="password" placeholder="Passwort" />
+      <button id="loginBtn" type="button">Einloggen</button>
+      <p id="status">Bereit zum Einloggen.</p>
+    </div>
   </div>
 
-  <div id="dashboard" class="box">
-    <h1>Karo Kebab Admin</h1>
-    <p>Login erfolgreich ✅</p>
-    <button id="logoutBtn" type="button">Logout</button>
+  <div id="dashboard" class="page">
+    <div class="topbar">
+      <div>
+        <h1 style="margin-bottom:6px;">Karo Kebab Admin</h1>
+        <div class="muted">Alle vorhandenen Daten werden direkt aus Supabase geladen.</div>
+      </div>
+      <div style="min-width:220px;">
+        <button id="logoutBtn" class="secondary" type="button">Logout</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Einstellungen</h2>
+        <input id="restaurant_name" placeholder="Restaurantname" />
+        <input id="phone" placeholder="Telefon" />
+        <input id="whatsapp" placeholder="WhatsApp" />
+        <input id="address" placeholder="Adresse" />
+        <input id="logo_url" placeholder="Logo URL" />
+        <input id="hero_image_url" placeholder="Hero Bild URL" />
+        <input id="primary_color" placeholder="Primärfarbe" />
+        <input id="secondary_color" placeholder="Sekundärfarbe" />
+        <button id="saveSettingsBtn" type="button">Einstellungen speichern</button>
+      </div>
+
+      <div class="card">
+        <h2>Neue Galerie</h2>
+        <input id="new_gallery_title" placeholder="Titel" />
+        <input id="new_gallery_category" placeholder="Kategorie" />
+        <input id="new_gallery_url" placeholder="Bild URL" />
+        <input id="new_gallery_sort" type="number" placeholder="Sortierung" />
+        <button id="addGalleryBtn" type="button">Galeriebild hinzufügen</button>
+      </div>
+
+      <div class="card full">
+        <h2>Galerie</h2>
+        <div id="galleryList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <h2>Neue Kategorie</h2>
+        <input id="new_category_name" placeholder="Kategoriename" />
+        <input id="new_category_image" placeholder="Bild URL" />
+        <input id="new_category_sort" type="number" placeholder="Sortierung" />
+        <button id="addCategoryBtn" type="button">Kategorie hinzufügen</button>
+      </div>
+
+      <div class="card">
+        <h2>Neuer Menüpunkt</h2>
+        <select id="new_item_category"></select>
+        <input id="new_item_name" placeholder="Name" />
+        <textarea id="new_item_description" placeholder="Beschreibung"></textarea>
+        <input id="new_item_price" placeholder="Preis" />
+        <input id="new_item_image" placeholder="Bild URL" />
+        <input id="new_item_sort" type="number" placeholder="Sortierung" />
+        <button id="addItemBtn" type="button">Menüpunkt hinzufügen</button>
+      </div>
+
+      <div class="card full">
+        <h2>Kategorien</h2>
+        <div id="categoriesList" class="list"></div>
+      </div>
+
+      <div class="card full">
+        <h2>Menü</h2>
+        <div id="menuItemsList" class="list"></div>
+      </div>
+    </div>
   </div>
 
   <script>
-    const statusEl = document.getElementById('status');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginBox = document.getElementById('loginBox');
-    const dashboard = document.getElementById('dashboard');
+    const supabaseUrl = "https://qyryocrqmfurtswnirhq.supabase.co";
+    const supabaseKey = "sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    statusEl.textContent = 'JavaScript läuft...';
+    const loginView = document.getElementById("loginView");
+    const dashboard = document.getElementById("dashboard");
+    const statusEl = document.getElementById("status");
 
-    const supabaseUrl = 'https://qyryocrqmfurtswnirhq.supabase.co';
-    const supabaseKey = 'sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3';
+    const emailEl = document.getElementById("email");
+    const passwordEl = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    if (!window.supabase || !window.supabase.createClient) {
-      statusEl.textContent = 'Fehler: Supabase Script wurde nicht geladen.';
-    } else {
-      statusEl.textContent = 'Bereit zum Einloggen.';
-      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const restaurantNameEl = document.getElementById("restaurant_name");
+    const phoneEl = document.getElementById("phone");
+    const whatsappEl = document.getElementById("whatsapp");
+    const addressEl = document.getElementById("address");
+    const logoUrlEl = document.getElementById("logo_url");
+    const heroImageUrlEl = document.getElementById("hero_image_url");
+    const primaryColorEl = document.getElementById("primary_color");
+    const secondaryColorEl = document.getElementById("secondary_color");
+    const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 
-      loginBtn.addEventListener('click', async function () {
-        statusEl.textContent = 'Button erkannt. Login läuft...';
+    const newGalleryTitleEl = document.getElementById("new_gallery_title");
+    const newGalleryCategoryEl = document.getElementById("new_gallery_category");
+    const newGalleryUrlEl = document.getElementById("new_gallery_url");
+    const newGallerySortEl = document.getElementById("new_gallery_sort");
+    const addGalleryBtn = document.getElementById("addGalleryBtn");
+    const galleryList = document.getElementById("galleryList");
 
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
+    const newCategoryNameEl = document.getElementById("new_category_name");
+    const newCategoryImageEl = document.getElementById("new_category_image");
+    const newCategorySortEl = document.getElementById("new_category_sort");
+    const addCategoryBtn = document.getElementById("addCategoryBtn");
+    const categoriesList = document.getElementById("categoriesList");
 
-        if (!email || !password) {
-          statusEl.textContent = 'Bitte E-Mail und Passwort eingeben.';
-          return;
-        }
+    const newItemCategoryEl = document.getElementById("new_item_category");
+    const newItemNameEl = document.getElementById("new_item_name");
+    const newItemDescriptionEl = document.getElementById("new_item_description");
+    const newItemPriceEl = document.getElementById("new_item_price");
+    const newItemImageEl = document.getElementById("new_item_image");
+    const newItemSortEl = document.getElementById("new_item_sort");
+    const addItemBtn = document.getElementById("addItemBtn");
+    const menuItemsList = document.getElementById("menuItemsList");
 
-        try {
-          const result = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
+    let currentSettingsId = null;
+    let categoriesCache = [];
+
+    async function login() {
+      const email = emailEl.value.trim();
+      const password = passwordEl.value;
+
+      if (!email || !password) {
+        statusEl.textContent = "Bitte E-Mail und Passwort eingeben.";
+        return;
+      }
+
+      statusEl.textContent = "Login läuft...";
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        statusEl.textContent = error.message;
+        return;
+      }
+
+      statusEl.textContent = "Login erfolgreich.";
+      await showDashboard();
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      dashboard.style.display = "none";
+      loginView.style.display = "flex";
+      statusEl.textContent = "Bereit zum Einloggen.";
+    }
+
+    async function checkSessionOnLoad() {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        await showDashboard();
+      } else {
+        loginView.style.display = "flex";
+        dashboard.style.display = "none";
+      }
+    }
+
+    async function showDashboard() {
+      loginView.style.display = "none";
+      dashboard.style.display = "block";
+      await initData();
+    }
+
+    async function initData() {
+      await loadSettings();
+      await loadCategories();
+      await loadGallery();
+      await loadMenuItems();
+    }
+
+    async function loadSettings() {
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("*")
+        .limit(1)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.error(error);
+        return;
+      }
+
+      if (data) {
+        currentSettingsId = data.id;
+        restaurantNameEl.value = data.restaurant_name || "";
+        phoneEl.value = data.phone || "";
+        whatsappEl.value = data.whatsapp || "";
+        addressEl.value = data.address || "";
+        logoUrlEl.value = data.logo_url || "";
+        heroImageUrlEl.value = data.hero_image_url || "";
+        primaryColorEl.value = data.primary_color || "";
+        secondaryColorEl.value = data.secondary_color || "";
+      }
+    }
+
+    async function saveSettings() {
+      const payload = {
+        restaurant_name: restaurantNameEl.value,
+        phone: phoneEl.value,
+        whatsapp: whatsappEl.value,
+        address: addressEl.value,
+        logo_url: logoUrlEl.value,
+        hero_image_url: heroImageUrlEl.value,
+        primary_color: primaryColorEl.value,
+        secondary_color: secondaryColorEl.value
+      };
+
+      let result;
+      if (currentSettingsId) {
+        result = await supabase
+          .from("site_settings")
+          .update(payload)
+          .eq("id", currentSettingsId);
+      } else {
+        result = await supabase
+          .from("site_settings")
+          .insert(payload)
+          .select()
+          .single();
+      }
+
+      if (result.error) {
+        alert(result.error.message);
+        return;
+      }
+
+      alert("Einstellungen gespeichert");
+      await loadSettings();
+    }
+
+    async function loadGallery() {
+      const { data, error } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      galleryList.innerHTML = "";
+
+      data.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="section-title">Galeriebild #${item.id}</div>
+          <input value="${escapeHtml(item.title || "")}" data-field="title" />
+          <input value="${escapeHtml(item.category || "")}" data-field="category" />
+          <input value="${escapeHtml(item.image_url || "")}" data-field="image_url" />
+          <input type="number" value="${item.sort_order ?? 0}" data-field="sort_order" />
+          ${item.image_url ? `<img src="${item.image_url}" alt="">` : ""}
+          <div class="row">
+            <button type="button" data-action="save">Speichern</button>
+            <button type="button" class="danger" data-action="delete">Löschen</button>
+          </div>
+        `;
+
+        const saveBtn = div.querySelector('[data-action="save"]');
+        const deleteBtn = div.querySelector('[data-action="delete"]');
+
+        saveBtn.addEventListener("click", async () => {
+          const inputs = div.querySelectorAll("[data-field]");
+          const payload = {};
+          inputs.forEach((input) => {
+            payload[input.dataset.field] = input.type === "number" ? Number(input.value || 0) : input.value;
           });
 
-          if (result.error) {
-            statusEl.textContent = result.error.message;
-            return;
-          }
+          const { error } = await supabase
+            .from("gallery_images")
+            .update(payload)
+            .eq("id", item.id);
 
-          loginBox.style.display = 'none';
-          dashboard.style.display = 'block';
-        } catch (e) {
-          statusEl.textContent = 'Unerwarteter Fehler: ' + e.message;
-        }
-      });
+          if (error) return alert(error.message);
+          await loadGallery();
+        });
 
-      logoutBtn.addEventListener('click', async function () {
-        await supabase.auth.signOut();
-        location.reload();
+        deleteBtn.addEventListener("click", async () => {
+          const ok = confirm("Galeriebild wirklich löschen?");
+          if (!ok) return;
+          const { error } = await supabase
+            .from("gallery_images")
+            .delete()
+            .eq("id", item.id);
+
+          if (error) return alert(error.message);
+          await loadGallery();
+        });
+
+        galleryList.appendChild(div);
       });
     }
-  </script>
 
+    async function addGallery() {
+      const payload = {
+        title: newGalleryTitleEl.value,
+        category: newGalleryCategoryEl.value,
+        image_url: newGalleryUrlEl.value,
+        sort_order: Number(newGallerySortEl.value || 0)
+      };
+
+      const { error } = await supabase.from("gallery_images").insert(payload);
+      if (error) return alert(error.message);
+
+      newGalleryTitleEl.value = "";
+      newGalleryCategoryEl.value = "";
+      newGalleryUrlEl.value = "";
+      newGallerySortEl.value = "";
+      await loadGallery();
+    }
+
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      categoriesCache = data;
+      categoriesList.innerHTML = "";
+      newItemCategoryEl.innerHTML = '<option value="">Kategorie wählen</option>';
+
+      data.forEach((cat) => {
+        const opt = document.createElement("option");
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        newItemCategoryEl.appendChild(opt);
+
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="section-title">Kategorie #${cat.id}</div>
+          <input value="${escapeHtml(cat.name || "")}" data-field="name" />
+          <input value="${escapeHtml(cat.image_url || "")}" data-field="image_url" />
+          <input type="number" value="${cat.sort_order ?? 0}" data-field="sort_order" />
+          ${cat.image_url ? `<img src="${cat.image_url}" alt="">` : ""}
+          <div class="row">
+            <button type="button" data-action="save">Speichern</button>
+            <button type="button" class="danger" data-action="delete">Löschen</button>
+          </div>
+        `;
+
+        div.querySelector('[data-action="save"]').addEventListener("click", async () => {
+          const inputs = div.querySelectorAll("[data-field]");
+          const payload = {};
+          inputs.forEach((input) => {
+            payload[input.dataset.field] = input.type === "number" ? Number(input.value || 0) : input.value;
+          });
+
+          const { error } = await supabase
+            .from("categories")
+            .update(payload)
+            .eq("id", cat.id);
+
+          if (error) return alert(error.message);
+          await loadCategories();
+          await loadMenuItems();
+        });
+
+        div.querySelector('[data-action="delete"]').addEventListener("click", async () => {
+          const ok = confirm("Kategorie wirklich löschen?");
+          if (!ok) return;
+          const { error } = await supabase
+            .from("categories")
+            .delete()
+            .eq("id", cat.id);
+
+          if (error) return alert(error.message);
+          await loadCategories();
+          await loadMenuItems();
+        });
+
+        categoriesList.appendChild(div);
+      });
+    }
+
+    async function addCategory() {
+      const payload = {
+        name: newCategoryNameEl.value,
+        image_url: newCategoryImageEl.value,
+        sort_order: Number(newCategorySortEl.value || 0)
+      };
+
+      const { error } = await supabase.from("categories").insert(payload);
+      if (error) return alert(error.message);
+
+      newCategoryNameEl.value = "";
+      newCategoryImageEl.value = "";
+      newCategorySortEl.value = "";
+      await loadCategories();
+      await loadMenuItems();
+    }
+
+    async function loadMenuItems() {
+      const { data, error } = await supabase
+        .from("menu_items")
+        .select("*")
+        .order("category_id", { ascending: true })
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      menuItemsList.innerHTML = "";
+
+      data.forEach((item) => {
+        const categoryOptions = categoriesCache.map((cat) => {
+          const selected = Number(cat.id) === Number(item.category_id) ? "selected" : "";
+          return `<option value="${cat.id}" ${selected}>${escapeHtml(cat.name)}</option>`;
+        }).join("");
+
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="section-title">Menüpunkt #${item.id}</div>
+          <select data-field="category_id">
+            <option value="">Kategorie wählen</option>
+            ${categoryOptions}
+          </select>
+          <input value="${escapeHtml(item.name || "")}" data-field="name" />
+          <textarea data-field="description">${escapeHtml(item.description || "")}</textarea>
+          <input value="${escapeHtml(item.price || "")}" data-field="price" />
+          <input value="${escapeHtml(item.image_url || "")}" data-field="image_url" />
+          <input type="number" value="${item.sort_order ?? 0}" data-field="sort_order" />
+          ${item.image_url ? `<img src="${item.image_url}" alt="">` : ""}
+          <div class="row">
+            <button type="button" data-action="save">Speichern</button>
+            <button type="button" class="danger" data-action="delete">Löschen</button>
+          </div>
+        `;
+
+        div.querySelector('[data-action="save"]').addEventListener("click", async () => {
+          const fields = div.querySelectorAll("[data-field]");
+          const payload = {};
+          fields.forEach((el) => {
+            if (el.dataset.field === "category_id" || el.dataset.field === "sort_order") {
+              payload[el.dataset.field] = el.value === "" ? null : Number(el.value);
+            } else {
+              payload[el.dataset.field] = el.value;
+            }
+          });
+
+          const { error } = await supabase
+            .from("menu_items")
+            .update(payload)
+            .eq("id", item.id);
+
+          if (error) return alert(error.message);
+          await loadMenuItems();
+        });
+
+        div.querySelector('[data-action="delete"]').addEventListener("click", async () => {
+          const ok = confirm("Menüpunkt wirklich löschen?");
+          if (!ok) return;
+
+          const { error } = await supabase
+            .from("menu_items")
+            .delete()
+            .eq("id", item.id);
+
+          if (error) return alert(error.message);
+          await loadMenuItems();
+        });
+
+        menuItemsList.appendChild(div);
+      });
+    }
+
+    async function addMenuItem() {
+      const payload = {
+        category_id: newItemCategoryEl.value === "" ? null : Number(newItemCategoryEl.value),
+        name: newItemNameEl.value,
+        description: newItemDescriptionEl.value,
+        price: newItemPriceEl.value,
+        image_url: newItemImageEl.value,
+        sort_order: Number(newItemSortEl.value || 0)
+      };
+
+      const { error } = await supabase.from("menu_items").insert(payload);
+      if (error) return alert(error.message);
+
+      newItemCategoryEl.value = "";
+      newItemNameEl.value = "";
+      newItemDescriptionEl.value = "";
+      newItemPriceEl.value = "";
+      newItemImageEl.value = "";
+      newItemSortEl.value = "";
+      await loadMenuItems();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    loginBtn.addEventListener("click", login);
+    logoutBtn.addEventListener("click", logout);
+    saveSettingsBtn.addEventListener("click", saveSettings);
+    addGalleryBtn.addEventListener("click", addGallery);
+    addCategoryBtn.addEventListener("click", addCategory);
+    addItemBtn.addEventListener("click", addMenuItem);
+
+    checkSessionOnLoad();
+  </script>
 </body>
 </html>
