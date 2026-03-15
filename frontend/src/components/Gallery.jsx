@@ -36,6 +36,24 @@ const Gallery = () => {
       title: 'Frisches Gemüse',
       category: 'Beste Zutaten',
     },
+    {
+  id: 7,
+  title: "Karo Kebab House",
+  category: "Restaurant",
+  url: "/images/WhatsApp Image 2.jpeg"
+},
+{
+  id: 8,
+  title: "Frisches Essen",
+  category: "Food",
+  url: "/images/WhatsApp Image 6.jpeg"
+},
+{
+  id: 9,
+  title: "Unsere Spezialitäten",
+  category: "Food",
+  url: "/images/WhatsApp Image 8.jpeg"
+}
   ];
 
   const openLightbox = (image) => {
