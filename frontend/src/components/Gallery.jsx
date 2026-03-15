@@ -4,61 +4,37 @@ import { X, Camera } from 'lucide-react';
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Placeholder gallery images - can be replaced with actual restaurant photos
+  // Restaurant photos from KARO KEBAB HOUSE
   const galleryImages = [
     {
       id: 1,
-      url: 'https://images.unsplash.com/photo-1633321702518-7feccafb94d5?q=85',
-      title: 'Döner Kebab',
-      category: 'Food',
+      url: 'https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/r240old5_WhatsApp%20Image%201.jpeg',
+      title: 'Döner Teller mit Reis',
+      category: 'Unsere Gerichte',
     },
     {
       id: 2,
-      url: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=85',
-      title: 'Grill Spezialitäten',
-      category: 'Food',
+      url: 'https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/jesdy2ih_WhatsApp%20Image%207.jpeg',
+      title: 'Frisches Dönerfleisch',
+      category: 'Unsere Spezialitäten',
     },
     {
       id: 3,
-      url: 'https://images.unsplash.com/photo-1623556299550-e806c0c1f1e8?q=85',
-      title: 'Fresh Bowls',
-      category: 'Food',
+      url: 'https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/0x7u06yn_WhatsApp%20Image%204.jpeg',
+      title: 'Frische Zubereitung',
+      category: 'Behind the Scenes',
     },
     {
       id: 4,
-      url: 'https://images.unsplash.com/photo-1771574208749-e3f497200d6f?q=85',
-      title: 'Lahmacun',
-      category: 'Food',
+      url: 'https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/aaxiobzy_WhatsApp%20Image%209.jpeg',
+      title: 'Zubereitung vor Ort',
+      category: 'Unser Team',
     },
     {
       id: 5,
-      url: 'https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?q=85',
-      title: 'Frische Pizza',
-      category: 'Food',
-    },
-    {
-      id: 6,
-      url: 'https://images.unsplash.com/photo-1701688596783-231b3764ef67?q=85',
-      title: 'Falafel',
-      category: 'Food',
-    },
-    {
-      id: 7,
-      url: 'https://images.unsplash.com/photo-1705663106388-6c1c51ff5a8d?q=85',
-      title: 'Baklava',
-      category: 'Dessert',
-    },
-    {
-      id: 8,
-      url: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=85',
-      title: 'Fingerfood',
-      category: 'Food',
-    },
-    {
-      id: 9,
-      url: 'https://images.unsplash.com/photo-1699728088614-7d1d4277414b?q=85',
-      title: 'Vom Grill',
-      category: 'Restaurant',
+      url: 'https://customer-assets.emergentagent.com/job_karo-hamburg-eats/artifacts/uuc59loo_WhatsApp%20Image%205.jpeg',
+      title: 'Frisches Gemüse',
+      category: 'Beste Zutaten',
     },
   ];
 
