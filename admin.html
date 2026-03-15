@@ -1,130 +1,130 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karo Kebab Admin</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-body{
-font-family:Arial;
-background:#111;
-color:white;
-margin:0;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-#loginBox{
-background:#1c1c1c;
-padding:40px;
-border-radius:10px;
-width:320px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:none;
-}
-
-button{
-width:100%;
-margin-top:15px;
-padding:12px;
-background:#ff7a00;
-border:none;
-border-radius:6px;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-background:#ff9500;
-}
-
-#dashboard{
-display:none;
-text-align:center;
-}
-
-#status{
-margin-top:10px;
-color:orange;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karo Kebab Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body{
+      font-family:Arial,sans-serif;
+      background:#111;
+      color:#fff;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .box{
+      width:340px;
+      background:#1c1c1c;
+      border-radius:12px;
+      padding:30px;
+      box-shadow:0 0 20px rgba(0,0,0,.35);
+    }
+    h2,h1{margin-top:0}
+    input{
+      width:100%;
+      box-sizing:border-box;
+      padding:12px;
+      margin-top:10px;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+    }
+    button{
+      width:100%;
+      margin-top:14px;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      background:#ff7a00;
+      color:#fff;
+      font-weight:bold;
+      font-size:16px;
+      cursor:pointer;
+    }
+    button:hover{background:#ff922e}
+    #status{
+      margin-top:12px;
+      min-height:24px;
+      color:#ffb15c;
+      font-size:14px;
+      white-space:pre-wrap;
+    }
+    #dashboard{display:none;text-align:center}
+  </style>
 </head>
-
 <body>
 
-<div id="loginBox">
+  <div id="loginBox" class="box">
+    <h2>Admin Login</h2>
+    <input id="email" type="email" placeholder="E-Mail" />
+    <input id="password" type="password" placeholder="Passwort" />
+    <button id="loginBtn" type="button">Einloggen</button>
+    <p id="status">Seite geladen...</p>
+  </div>
 
-<h2>Admin Login</h2>
+  <div id="dashboard" class="box">
+    <h1>Karo Kebab Admin</h1>
+    <p>Login erfolgreich ✅</p>
+    <button id="logoutBtn" type="button">Logout</button>
+  </div>
 
-<input id="email" placeholder="E-Mail">
-<input id="password" type="password" placeholder="Passwort">
+  <script>
+    const statusEl = document.getElementById('status');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginBox = document.getElementById('loginBox');
+    const dashboard = document.getElementById('dashboard');
 
-<button onclick="login()">Einloggen</button>
+    statusEl.textContent = 'JavaScript läuft...';
 
-<p id="status"></p>
+    const supabaseUrl = 'https://qyryocrqmfurtswnirhq.supabase.co';
+    const supabaseKey = 'sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3';
 
-</div>
+    if (!window.supabase || !window.supabase.createClient) {
+      statusEl.textContent = 'Fehler: Supabase Script wurde nicht geladen.';
+    } else {
+      statusEl.textContent = 'Bereit zum Einloggen.';
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-<div id="dashboard">
+      loginBtn.addEventListener('click', async function () {
+        statusEl.textContent = 'Button erkannt. Login läuft...';
 
-<h1>Karo Kebab Admin</h1>
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
-<p>Login erfolgreich ✅</p>
+        if (!email || !password) {
+          statusEl.textContent = 'Bitte E-Mail und Passwort eingeben.';
+          return;
+        }
 
-<button onclick="logout()">Logout</button>
+        try {
+          const result = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
 
-</div>
+          if (result.error) {
+            statusEl.textContent = result.error.message;
+            return;
+          }
 
-<script>
+          loginBox.style.display = 'none';
+          dashboard.style.display = 'block';
+        } catch (e) {
+          statusEl.textContent = 'Unerwarteter Fehler: ' + e.message;
+        }
+      });
 
-const supabaseUrl="https://qyryocrqmfurtswnirhq.supabase.co"
-const supabaseKey="sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3"
-
-const supabase = window.supabase.createClient(supabaseUrl,supabaseKey)
-
-async function login(){
-
-const email=document.getElementById("email").value
-const password=document.getElementById("password").value
-
-document.getElementById("status").innerText="Prüfe Login..."
-
-const {data,error}=await supabase.auth.signInWithPassword({
-email:email,
-password:password
-})
-
-if(error){
-document.getElementById("status").innerText=error.message
-return
-}
-
-document.getElementById("loginBox").style.display="none"
-document.getElementById("dashboard").style.display="block"
-
-}
-
-async function logout(){
-
-await supabase.auth.signOut()
-
-location.reload()
-
-}
-
-</script>
+      logoutBtn.addEventListener('click', async function () {
+        await supabase.auth.signOut();
+        location.reload();
+      });
+    }
+  </script>
 
 </body>
 </html>
