@@ -1,136 +1,163 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karo Kebab Admin</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karo Kebab Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#0f0f0f;
+      color:white;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    #loginBox, #dashboard{
+      background:#1c1c1c;
+      padding:32px;
+      border-radius:12px;
+      width:340px;
+      box-shadow:0 0 20px rgba(0,0,0,0.35);
+    }
 
-<style>
+    #dashboard{
+      display:none;
+      text-align:center;
+    }
 
-body{
-font-family:Arial;
-background:#0f0f0f;
-color:white;
-margin:0;
-padding:0;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+    h2, h1{
+      margin-top:0;
+    }
 
-#loginBox{
-background:#1c1c1c;
-padding:40px;
-border-radius:10px;
-width:320px;
-}
+    input{
+      width:100%;
+      box-sizing:border-box;
+      padding:12px;
+      margin-top:10px;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+    }
 
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border:none;
-border-radius:6px;
-}
+    button{
+      width:100%;
+      margin-top:14px;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      background:#ff7a00;
+      color:white;
+      font-weight:bold;
+      font-size:16px;
+      cursor:pointer;
+    }
 
-button{
-margin-top:15px;
-width:100%;
-padding:10px;
-background:#ff6a00;
-border:none;
-border-radius:6px;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
+    button:hover{
+      background:#ff8c1a;
+    }
 
-button:hover{
-background:#ff8800;
-}
-
-#dashboard{
-display:none;
-text-align:center;
-padding:40px;
-}
-
-</style>
-
+    #status{
+      margin-top:12px;
+      min-height:20px;
+      color:#ffb366;
+      font-size:14px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="loginBox">
+  <div id="loginBox">
+    <h2>Admin Login</h2>
 
-<h2>Admin Login</h2>
+    <input id="email" type="email" placeholder="E-Mail" />
+    <input id="password" type="password" placeholder="Passwort" />
 
-<input id="email" placeholder="E-Mail">
+    <button id="loginBtn" type="button">Einloggen</button>
 
-<input id="password" type="password" placeholder="Passwort">
+    <p id="status"></p>
+  </div>
 
-<button onclick="login()">Einloggen</button>
+  <div id="dashboard">
+    <h1>Karo Kebab Admin</h1>
+    <p>Eingeloggt ✅</p>
+    <button id="logoutBtn" type="button">Logout</button>
+  </div>
 
-<p id="status"></p>
+  <script>
+    const supabaseUrl = "https://qyryocrqmfurtswnirhq.supabase.co";
+    const supabaseKey = "sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3";
 
-</div>
+    const clientFactory = window.supabase && window.supabase.createClient;
+    const statusEl = document.getElementById("status");
+    const loginBox = document.getElementById("loginBox");
+    const dashboard = document.getElementById("dashboard");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
+    let supabase = null;
 
-<div id="dashboard">
+    if (!clientFactory) {
+      statusEl.innerText = "Supabase konnte nicht geladen werden.";
+      console.error("window.supabase.createClient not found");
+    } else {
+      supabase = clientFactory(supabaseUrl, supabaseKey);
+      statusEl.innerText = "Bereit zum Einloggen.";
+    }
 
-<h1>Karo Kebab Admin</h1>
+    async function login() {
+      if (!supabase) {
+        statusEl.innerText = "Supabase ist nicht bereit.";
+        return;
+      }
 
-<p>Eingeloggt ✅</p>
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
 
-<button onclick="logout()">Logout</button>
+      if (!email || !password) {
+        statusEl.innerText = "Bitte E-Mail und Passwort eingeben.";
+        return;
+      }
 
-</div>
+      statusEl.innerText = "Anmeldung läuft...";
 
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-<script>
+        if (error) {
+          statusEl.innerText = error.message;
+          console.error(error);
+          return;
+        }
 
-const supabaseUrl="https://qyryocrqmfurtswnirhq.supabase.co"
-const supabaseKey="sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3"
+        console.log("Login success:", data);
+        loginBox.style.display = "none";
+        dashboard.style.display = "block";
+      } catch (err) {
+        statusEl.innerText = "Unerwarteter Fehler beim Login.";
+        console.error(err);
+      }
+    }
 
-const supabase=window.supabase.createClient(supabaseUrl,supabaseKey)
+    async function logout() {
+      if (!supabase) return;
 
-async function login(){
+      await supabase.auth.signOut();
+      dashboard.style.display = "none";
+      loginBox.style.display = "block";
+      statusEl.innerText = "Abgemeldet.";
+    }
 
-const email=document.getElementById("email").value
-const password=document.getElementById("password").value
-
-document.getElementById("status").innerText="Wird geprüft..."
-
-const { data, error } = await supabase.auth.signInWithPassword({
-email:email,
-password:password
-})
-
-if(error){
-document.getElementById("status").innerText = error.message
-return
-}
-
-document.getElementById("status").innerText="Login erfolgreich"
-
-document.getElementById("loginBox").style.display="none"
-document.getElementById("dashboard").style.display="block"
-
-}
-
-async function logout(){
-
-await supabase.auth.signOut()
-
-location.reload()
-
-}
-
-</script>
+    loginBtn.addEventListener("click", login);
+    logoutBtn.addEventListener("click", logout);
+  </script>
 
 </body>
 </html>
