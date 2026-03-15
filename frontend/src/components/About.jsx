@@ -19,13 +19,25 @@ const About = () => {
             {/* Text Content */}
             <div className="space-y-6">
               <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                Willkommen bei <span className="text-orange-500 font-bold">Karo Kebab House</span> in Hamburg.
+                Unser Restaurant ist ein familiengeführter Betrieb im Herzen des Karolinenviertels.
               </p>
               <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                Wir servieren frischen Döner, Lahmacun, Pizza, Bowls und viele weitere Street-Food Spezialitäten.
+                Als Familie leben wir selbst hier im Viertel und freuen uns jeden Tag, unsere Gäste mit frischem und leckerem Essen begrüßen zu dürfen.
               </p>
               <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                Unsere Gerichte werden <span className="text-orange-500 font-semibold">täglich frisch zubereitet</span> und mit hochwertigen Zutaten gekocht.
+                Bei uns stehen <span className="text-orange-500 font-semibold">Qualität, Gastfreundschaft und ein persönlicher Umgang</span> mit unseren Gästen an erster Stelle.
+              </p>
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+                Unsere Gerichte werden <span className="text-orange-500 font-semibold">täglich frisch und mit viel Liebe</span> zubereitet.
+              </p>
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+                Das Karolinenviertel ist für uns nicht nur ein Standort – es ist unsere Heimat.
+              </p>
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+                Wir möchten unseren Gästen eine gemütliche Atmosphäre und echtes Street-Food mit Geschmack bieten.
+              </p>
+              <p className="text-lg md:text-xl text-orange-500 font-bold leading-relaxed mt-8">
+                Wir freuen uns auf Ihren Besuch bei Karo Kebab House!
               </p>
 
               {/* Features */}
