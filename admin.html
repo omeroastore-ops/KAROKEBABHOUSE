@@ -103,15 +103,19 @@ async function login(){
 const email=document.getElementById("email").value
 const password=document.getElementById("password").value
 
-const {error}=await supabase.auth.signInWithPassword({
+document.getElementById("status").innerText="Wird geprüft..."
+
+const { data, error } = await supabase.auth.signInWithPassword({
 email:email,
 password:password
 })
 
 if(error){
-document.getElementById("status").innerText="Login fehlgeschlagen"
+document.getElementById("status").innerText = error.message
 return
 }
+
+document.getElementById("status").innerText="Login erfolgreich"
 
 document.getElementById("loginBox").style.display="none"
 document.getElementById("dashboard").style.display="block"
