@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karo Kebab Panel</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#111;
+      color:white;
+      padding:30px;
+    }
+    .box{
+      background:#1c1c1c;
+      border-radius:12px;
+      padding:24px;
+      max-width:900px;
+      margin:auto;
+    }
+    button{
+      padding:12px 18px;
+      border:none;
+      border-radius:8px;
+      background:#ff7a00;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Karo Kebab Admin Panel</h1>
+    <p id="status">Prüfe Sitzung...</p>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://qyryocrqmfurtswnirhq.supabase.co";
+    const supabaseKey = "sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function checkSession() {
+      const result = await supabase.auth.getSession();
+      const session = result.data.session;
+
+      if (!session) {
+        window.location.href = "/KAROKEBABHOUSE/admin.html?v=300";
+        return;
+      }
+
+      document.getElementById("status").innerText = "Eingeloggt ✅";
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = "/KAROKEBABHOUSE/admin.html?v=300";
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    checkSession();
+  </script>
+</body>
+</html>
