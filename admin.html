@@ -138,9 +138,6 @@
       margin-bottom: 8px;
       color: #ffb15c;
     }
-    .spacer {
-      height: 6px;
-    }
     @media (max-width: 900px) {
       .grid, .row {
         grid-template-columns: 1fr;
@@ -279,6 +276,15 @@
     let currentSettingsId = null;
     let categoriesCache = [];
 
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
     async function login() {
       const email = emailEl.value.trim();
       const password = passwordEl.value;
@@ -290,10 +296,7 @@
 
       statusEl.textContent = "Login läuft...";
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         statusEl.textContent = error.message;
@@ -339,9 +342,9 @@
         .from("site_settings")
         .select("*")
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== "PGRST116") {
+      if (error) {
         console.error(error);
         return;
       }
@@ -371,24 +374,16 @@
         secondary_color: secondaryColorEl.value
       };
 
-      let result;
+      let error;
+
       if (currentSettingsId) {
-        result = await supabase
-          .from("site_settings")
-          .update(payload)
-          .eq("id", currentSettingsId);
+        ({ error } = await supabase.from("site_settings").update(payload).eq("id", currentSettingsId));
       } else {
-        result = await supabase
-          .from("site_settings")
-          .insert(payload)
-          .select()
-          .single();
+        const result = await supabase.from("site_settings").insert(payload).select().single();
+        error = result.error;
       }
 
-      if (result.error) {
-        alert(result.error.message);
-        return;
-      }
+      if (error) return alert(error.message);
 
       alert("Einstellungen gespeichert");
       await loadSettings();
@@ -413,9 +408,9 @@
         div.className = "item";
         div.innerHTML = `
           <div class="section-title">Galeriebild #${item.id}</div>
-          <input value="${escapeHtml(item.title || "")}" data-field="title" />
-          <input value="${escapeHtml(item.category || "")}" data-field="category" />
-          <input value="${escapeHtml(item.image_url || "")}" data-field="image_url" />
+          <input value="${escapeHtml(item.title)}" data-field="title" />
+          <input value="${escapeHtml(item.category)}" data-field="category" />
+          <input value="${escapeHtml(item.image_url)}" data-field="image_url" />
           <input type="number" value="${item.sort_order ?? 0}" data-field="sort_order" />
           ${item.image_url ? `<img src="${item.image_url}" alt="">` : ""}
           <div class="row">
@@ -424,33 +419,21 @@
           </div>
         `;
 
-        const saveBtn = div.querySelector('[data-action="save"]');
-        const deleteBtn = div.querySelector('[data-action="delete"]');
-
-        saveBtn.addEventListener("click", async () => {
+        div.querySelector('[data-action="save"]').addEventListener("click", async () => {
           const inputs = div.querySelectorAll("[data-field]");
           const payload = {};
           inputs.forEach((input) => {
             payload[input.dataset.field] = input.type === "number" ? Number(input.value || 0) : input.value;
           });
 
-          const { error } = await supabase
-            .from("gallery_images")
-            .update(payload)
-            .eq("id", item.id);
-
+          const { error } = await supabase.from("gallery_images").update(payload).eq("id", item.id);
           if (error) return alert(error.message);
           await loadGallery();
         });
 
-        deleteBtn.addEventListener("click", async () => {
-          const ok = confirm("Galeriebild wirklich löschen?");
-          if (!ok) return;
-          const { error } = await supabase
-            .from("gallery_images")
-            .delete()
-            .eq("id", item.id);
-
+        div.querySelector('[data-action="delete"]').addEventListener("click", async () => {
+          if (!confirm("Galeriebild wirklich löschen?")) return;
+          const { error } = await supabase.from("gallery_images").delete().eq("id", item.id);
           if (error) return alert(error.message);
           await loadGallery();
         });
@@ -503,8 +486,8 @@
         div.className = "item";
         div.innerHTML = `
           <div class="section-title">Kategorie #${cat.id}</div>
-          <input value="${escapeHtml(cat.name || "")}" data-field="name" />
-          <input value="${escapeHtml(cat.image_url || "")}" data-field="image_url" />
+          <input value="${escapeHtml(cat.name)}" data-field="name" />
+          <input value="${escapeHtml(cat.image_url)}" data-field="image_url" />
           <input type="number" value="${cat.sort_order ?? 0}" data-field="sort_order" />
           ${cat.image_url ? `<img src="${cat.image_url}" alt="">` : ""}
           <div class="row">
@@ -520,24 +503,15 @@
             payload[input.dataset.field] = input.type === "number" ? Number(input.value || 0) : input.value;
           });
 
-          const { error } = await supabase
-            .from("categories")
-            .update(payload)
-            .eq("id", cat.id);
-
+          const { error } = await supabase.from("categories").update(payload).eq("id", cat.id);
           if (error) return alert(error.message);
           await loadCategories();
           await loadMenuItems();
         });
 
         div.querySelector('[data-action="delete"]').addEventListener("click", async () => {
-          const ok = confirm("Kategorie wirklich löschen?");
-          if (!ok) return;
-          const { error } = await supabase
-            .from("categories")
-            .delete()
-            .eq("id", cat.id);
-
+          if (!confirm("Kategorie wirklich löschen?")) return;
+          const { error } = await supabase.from("categories").delete().eq("id", cat.id);
           if (error) return alert(error.message);
           await loadCategories();
           await loadMenuItems();
@@ -593,10 +567,10 @@
             <option value="">Kategorie wählen</option>
             ${categoryOptions}
           </select>
-          <input value="${escapeHtml(item.name || "")}" data-field="name" />
-          <textarea data-field="description">${escapeHtml(item.description || "")}</textarea>
-          <input value="${escapeHtml(item.price || "")}" data-field="price" />
-          <input value="${escapeHtml(item.image_url || "")}" data-field="image_url" />
+          <input value="${escapeHtml(item.name)}" data-field="name" />
+          <textarea data-field="description">${escapeHtml(item.description)}</textarea>
+          <input value="${escapeHtml(item.price)}" data-field="price" />
+          <input value="${escapeHtml(item.image_url)}" data-field="image_url" />
           <input type="number" value="${item.sort_order ?? 0}" data-field="sort_order" />
           ${item.image_url ? `<img src="${item.image_url}" alt="">` : ""}
           <div class="row">
@@ -616,24 +590,14 @@
             }
           });
 
-          const { error } = await supabase
-            .from("menu_items")
-            .update(payload)
-            .eq("id", item.id);
-
+          const { error } = await supabase.from("menu_items").update(payload).eq("id", item.id);
           if (error) return alert(error.message);
           await loadMenuItems();
         });
 
         div.querySelector('[data-action="delete"]').addEventListener("click", async () => {
-          const ok = confirm("Menüpunkt wirklich löschen?");
-          if (!ok) return;
-
-          const { error } = await supabase
-            .from("menu_items")
-            .delete()
-            .eq("id", item.id);
-
+          if (!confirm("Menüpunkt wirklich löschen?")) return;
+          const { error } = await supabase.from("menu_items").delete().eq("id", item.id);
           if (error) return alert(error.message);
           await loadMenuItems();
         });
@@ -662,15 +626,6 @@
       newItemImageEl.value = "";
       newItemSortEl.value = "";
       await loadMenuItems();
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;");
     }
 
     loginBtn.addEventListener("click", login);
