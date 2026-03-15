@@ -1,142 +1,132 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="de">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid #444;
-      background: #0f0f0f;
-      color: white;
-      box-sizing: border-box;
-    }
-    button {
-      background: #f97316;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .item {
-      padding: 12px;
-      border: 1px solid #333;
-      border-radius: 12px;
-      margin-top: 10px;
-    }
-    img.preview {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-      margin-top: 10px;
-    }
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-    .row > * {
-      flex: 1;
-    }
-    h1, h2, h3 {
-      margin-top: 0;
-    }
-    .muted {
-      color: #aaa;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karo Kebab Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+margin:0;
+padding:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#loginBox{
+background:#1c1c1c;
+padding:40px;
+border-radius:10px;
+width:320px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+}
+
+button{
+margin-top:15px;
+width:100%;
+padding:10px;
+background:#ff6a00;
+border:none;
+border-radius:6px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff8800;
+}
+
+#dashboard{
+display:none;
+text-align:center;
+padding:40px;
+}
+
+</style>
+
 </head>
+
 <body>
-  <div class="wrap">
-    <h1>لوحة التحكم</h1>
 
-    <div class="card">
-      <h2>تسجيل الدخول</h2>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <div class="row">
-        <button id="loginBtn">دخول</button>
-        <button id="logoutBtn" type="button">تسجيل خروج</button>
-      </div>
-      <p id="authStatus" class="muted"></p>
-    </div>
+<div id="loginBox">
 
-    <div class="grid">
-      <div class="card">
-        <h2>إعدادات الموقع</h2>
-        <input id="restaurant_name" placeholder="اسم المطعم" />
-        <input id="phone" placeholder="رقم الهاتف" />
-        <input id="whatsapp" placeholder="واتساب" />
-        <input id="address" placeholder="العنوان" />
-        <input id="primary_color" placeholder="اللون الأساسي" />
-        <input id="secondary_color" placeholder="اللون الثانوي" />
-        <button id="saveSettingsBtn">حفظ الإعدادات</button>
-      </div>
+<h2>Admin Login</h2>
 
-      <div class="card">
-        <h2>رفع صورة للغاليري</h2>
-        <input id="gallery_title" placeholder="عنوان الصورة" />
-        <input id="gallery_category" placeholder="تصنيف الصورة" />
-        <input id="gallery_file" type="file" accept="image/*" />
-        <button id="uploadGalleryBtn">رفع الصورة</button>
-        <div id="galleryList"></div>
-      </div>
-    </div>
+<input id="email" placeholder="E-Mail">
 
-    <div class="grid">
-      <div class="card">
-        <h2>إضافة قسم</h2>
-        <input id="category_name" placeholder="اسم القسم" />
-        <input id="category_file" type="file" accept="image/*" />
-        <button id="addCategoryBtn">إضافة القسم</button>
-        <div id="categoriesList"></div>
-      </div>
+<input id="password" type="password" placeholder="Passwort">
 
-      <div class="card">
-        <h2>إضافة عنصر منيو</h2>
-        <select id="item_category"></select>
-        <input id="item_name" placeholder="اسم الأكلة" />
-        <textarea id="item_description" placeholder="الوصف"></textarea>
-        <input id="item_price" placeholder="السعر" />
-        <input id="item_file" type="file" accept="image/*" />
-        <button id="addItemBtn">إضافة العنصر</button>
-        <div id="menuItemsList"></div>
-      </div>
-    </div>
-  </div>
+<button onclick="login()">Einloggen</button>
 
-  <script type="module" src="./js/admin.js"></script>
+<p id="status"></p>
+
+</div>
+
+
+<div id="dashboard">
+
+<h1>Karo Kebab Admin</h1>
+
+<p>Eingeloggt ✅</p>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+
+<script>
+
+const supabaseUrl="https://qyryocrqmfurtswnirhq.supabase.co"
+const supabaseKey="sb_publishable_w_JEAPUsj4A3lUvVI-QOoQ_AB67GjN3"
+
+const supabase=window.supabase.createClient(supabaseUrl,supabaseKey)
+
+async function login(){
+
+const email=document.getElementById("email").value
+const password=document.getElementById("password").value
+
+const {error}=await supabase.auth.signInWithPassword({
+email:email,
+password:password
+})
+
+if(error){
+document.getElementById("status").innerText="Login fehlgeschlagen"
+return
+}
+
+document.getElementById("loginBox").style.display="none"
+document.getElementById("dashboard").style.display="block"
+
+}
+
+async function logout(){
+
+await supabase.auth.signOut()
+
+location.reload()
+
+}
+
+</script>
+
 </body>
 </html>
