@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapPin, Phone, Navigation } from 'lucide-react';
 
 const Location = () => {
-  const address = 'Marktstraße 130, 20357 Hamburg';
-  const phone = '040 30387414';
-  const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=Marktstraße+130+20357+Hamburg';
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch('/content/settings.json');
+        const data = await res.json();
+        setSettings(data);
+      } catch (error) {
+        console.error('Error loading settings.json:', error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  if (!settings) return null;
+
+  const address = settings.address || 'Marktstraße 130, 20357 Hamburg';
+  const phone = settings.phone || '040 30387414';
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (
     <section id="location" className="py-20 md:py-32 bg-black">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-7xl font-bold urban-heading text-white mb-4 fire-glow">
               STANDORT
@@ -19,9 +36,7 @@ const Location = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Contact Info */}
             <div className="space-y-6">
-              {/* Address Card */}
               <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-orange-500/20 hover-lift">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
@@ -34,7 +49,6 @@ const Location = () => {
                 </div>
               </div>
 
-              {/* Phone Card */}
               <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-orange-500/20 hover-lift">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
@@ -52,7 +66,6 @@ const Location = () => {
                 </div>
               </div>
 
-              {/* Directions Button */}
               <a
                 href={googleMapsUrl}
                 target="_blank"
@@ -64,10 +77,9 @@ const Location = () => {
               </a>
             </div>
 
-            {/* Google Maps Embed */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-orange-500/30 h-[400px] md:h-full min-h-[400px]">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2369.3076891234!2d9.967089!3d53.559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b18f1b1b1b1b1b%3A0x1b1b1b1b1b1b1b1b!2sMarktstra%C3%9Fe%20130%2C%2020357%20Hamburg!5e0!3m2!1sde!2sde!4v1234567890"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
