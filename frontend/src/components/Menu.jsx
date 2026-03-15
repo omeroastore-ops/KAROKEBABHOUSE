@@ -1,37 +1,81 @@
-import React, { useState } from 'react';
-import { menuData } from '../data/mockData';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [menuData, setMenuData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { id: 'all', name: 'Alle' },
-    { id: 'doner', name: 'Döner' },
-    { id: 'bowls', name: 'Bowls & Salate' },
-    { id: 'lahmacun', name: 'Lahmacun & Pide' },
-    { id: 'pfanne', name: 'Pfannengerichte' },
-    { id: 'vegetarisch', name: 'Vegetarisch' },
-    { id: 'fingerfood', name: 'Fingerfood' },
-    { id: 'pizza', name: 'Pizza' },
-    { id: 'dessert', name: 'Dessert' },
-  ];
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const res = await fetch('/content/menu.json');
+        const data = await res.json();
 
-  const filteredMenu = selectedCategory === 'all'
-    ? menuData
-    : menuData.filter(cat => cat.id === selectedCategory);
+        const categoriesFromJson = (data.categories || []).map((cat, index) => ({
+          id: cat.id || cat.name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9äöüß-]/gi, '') || `cat-${index}`,
+          title: cat.name || `Kategorie ${index + 1}`,
+          image: cat.image || '/images/WhatsApp Image 2.jpeg',
+          items: (cat.items || []).map((item) => ({
+            name: item.title || '',
+            price: item.price || '',
+            description: item.description || '',
+          })),
+        }));
+
+        setMenuData(categoriesFromJson);
+      } catch (error) {
+        console.error('Error loading menu.json:', error);
+        setMenuData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMenu();
+  }, []);
+
+  const categories = useMemo(() => {
+    return [
+      { id: 'all', name: 'Alle' },
+      ...menuData.map((cat) => ({
+        id: cat.id,
+        name: cat.title,
+      })),
+    ];
+  }, [menuData]);
+
+  const filteredMenu =
+    selectedCategory === 'all'
+      ? menuData
+      : menuData.filter((cat) => cat.id === selectedCategory);
+
+  if (loading) {
+    return (
+      <section id="menu" className="py-20 md:py-32 bg-black">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-5xl md:text-7xl font-bold urban-heading text-white mb-4 fire-glow">
+              UNSERE SPEISEKARTE
+            </h2>
+            <p className="text-xl text-orange-500 font-semibold">Wird geladen...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="menu" className="py-20 md:py-32 bg-black">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-7xl font-bold urban-heading text-white mb-4 fire-glow">
             UNSERE SPEISEKARTE
           </h2>
-          <p className="text-xl text-orange-500 font-semibold">Frisch zubereitet, direkt vom Grill</p>
+          <p className="text-xl text-orange-500 font-semibold">
+            Frisch zubereitet, direkt vom Grill
+          </p>
         </div>
 
-        {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {categories.map((cat) => (
             <button
@@ -48,12 +92,10 @@ const Menu = () => {
           ))}
         </div>
 
-        {/* Menu Items */}
         <div className="space-y-16">
           {filteredMenu.map((category) => (
             <div key={category.id} className="max-w-6xl mx-auto">
               <div className="grid md:grid-cols-2 gap-8 items-start">
-                {/* Category Image */}
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl hover-lift h-[400px]">
                   <img
                     src={category.image}
@@ -68,7 +110,6 @@ const Menu = () => {
                   </div>
                 </div>
 
-                {/* Menu Items List */}
                 <div className="space-y-4">
                   {category.items.map((item, index) => (
                     <div
@@ -92,6 +133,10 @@ const Menu = () => {
               </div>
             </div>
           ))}
+
+          {filteredMenu.length === 0 && (
+            <div className="text-center text-gray-400">Keine Menüdaten gefunden.</div>
+          )}
         </div>
       </div>
     </section>
