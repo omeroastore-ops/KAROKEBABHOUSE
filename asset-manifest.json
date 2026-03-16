@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/KAROKEBABHOUSE/static/css/main.f6f484d1.css",
+    "main.js": "/KAROKEBABHOUSE/static/js/main.b63b3636.js",
+    "index.html": "/KAROKEBABHOUSE/index.html",
+    "main.f6f484d1.css.map": "/KAROKEBABHOUSE/static/css/main.f6f484d1.css.map",
+    "main.b63b3636.js.map": "/KAROKEBABHOUSE/static/js/main.b63b3636.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f6f484d1.css",
+    "static/js/main.b63b3636.js"
+  ]
+}
