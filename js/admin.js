@@ -59,6 +59,9 @@ async function loadSettings() {
   if (error || !data) return
 
   restaurantNameEl.value = data.restaurant_name || ''
+  openingWeekEl.value = data.opening_hours_week || ''
+openingWeekendEl.value = data.opening_hours_weekend || ''
+openingSundayEl.value = data.opening_hours_sunday || ''
   phoneEl.value = data.phone || ''
   whatsappEl.value = data.whatsapp || ''
   addressEl.value = data.address || ''
@@ -75,6 +78,9 @@ async function saveSettings() {
 
   const payload = {
     restaurant_name: restaurantNameEl.value,
+    opening_hours_week: openingWeekEl.value,
+    opening_hours_weekend: openingWeekendEl.value,
+    opening_hours_sunday: openingSundayEl.value,
     phone: phoneEl.value,
     whatsapp: whatsappEl.value,
     address: addressEl.value,
