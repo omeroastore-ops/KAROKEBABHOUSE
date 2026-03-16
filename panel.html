@@ -49,7 +49,7 @@
       const session = result.data.session;
 
       if (!session) {
-        window.location.href = "/KAROKEBABHOUSE/admin.html?v=300";
+        window.location.href = "admin.html?v=300";
         return;
       }
 
@@ -58,7 +58,7 @@
 
     async function logout() {
       await supabase.auth.signOut();
-      window.location.href = "/KAROKEBABHOUSE/admin.html?v=300";
+      window.location.href = "admin.html?v=300";
     }
 
     document.getElementById("logoutBtn").addEventListener("click", logout);
