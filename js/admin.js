@@ -38,12 +38,12 @@ async function login() {
     email: emailEl.value,
     password: passwordEl.value
   })
-  authStatus.textContent = error ? error.message : 'تم تسجيل الدخول'
+  authStatus.textContent = error ? error.message : 'Erfolgreich eingeloggt'
 }
 
 async function logout() {
   await supabase.auth.signOut()
-  authStatus.textContent = 'تم تسجيل الخروج'
+  authStatus.textContent = 'Erfolgreich ausgeloggt'
 }
 
 async function loadSettings() {
@@ -86,7 +86,7 @@ async function saveSettings() {
     result = await supabase.from('site_settings').insert(payload)
   }
 
-  alert(result.error ? result.error.message : 'تم حفظ الإعدادات')
+  alert(result.error ? result.error.message : 'Einstellungen gespeichert')
 }
 
 async function uploadToBucket(bucket, file) {
@@ -118,7 +118,7 @@ async function loadGallery() {
       <strong>${img.title || ''}</strong>
       <div>${img.category || ''}</div>
       <img class="preview" src="${img.image_url}" alt="">
-      <button data-id="${img.id}" class="delete-gallery">حذف</button>
+      <button data-id="${img.id}" class="delete-gallery">Löschen</button>
     `
     galleryList.appendChild(div)
   })
@@ -134,7 +134,7 @@ async function loadGallery() {
 
 async function uploadGalleryImage() {
   const file = galleryFileEl.files[0]
-  if (!file) return alert('اختر صورة أولاً')
+  if (!file) return alert('Bitte zuerst ein Bild auswählen')
 
   try {
     const imageUrl = await uploadToBucket('gallery-images', file)
@@ -151,7 +151,7 @@ async function uploadGalleryImage() {
     galleryCategoryEl.value = ''
     galleryFileEl.value = ''
     loadGallery()
-    alert('تم رفع صورة الغاليري')
+    alert('Galeriebild wurde hochgeladen')
   } catch (err) {
     alert(err.message)
   }
@@ -166,7 +166,7 @@ async function loadCategories() {
   if (error) return
 
   categoriesList.innerHTML = ''
-  itemCategoryEl.innerHTML = '<option value="">اختر القسم</option>'
+  itemCategoryEl.innerHTML = '<option value="">Kategorie auswählen</option>'
 
   data.forEach((cat) => {
     const option = document.createElement('option')
@@ -179,7 +179,7 @@ async function loadCategories() {
     div.innerHTML = `
       <strong>${cat.name}</strong>
       ${cat.image_url ? `<img class="preview" src="${cat.image_url}" alt="">` : ''}
-      <button data-id="${cat.id}" class="delete-category">حذف</button>
+      <button data-id="${cat.id}" class="delete-category">Löschen</button>
     `
     categoriesList.appendChild(div)
   })
@@ -213,7 +213,7 @@ async function addCategory() {
     categoryNameEl.value = ''
     categoryFileEl.value = ''
     loadCategories()
-    alert('تمت إضافة القسم')
+    alert('Kategorie wurde hinzugefügt')
   } catch (err) {
     alert(err.message)
   }
@@ -237,7 +237,7 @@ async function loadMenuItems() {
       <div>${item.price || ''}</div>
       <div>${item.description || ''}</div>
       ${item.image_url ? `<img class="preview" src="${item.image_url}" alt="">` : ''}
-      <button data-id="${item.id}" class="delete-item">حذف</button>
+      <button data-id="${item.id}" class="delete-item">Löschen</button>
     `
     menuItemsList.appendChild(div)
   })
@@ -275,7 +275,7 @@ async function addMenuItem() {
     itemPriceEl.value = ''
     itemFileEl.value = ''
     loadMenuItems()
-    alert('تمت إضافة العنصر')
+    alert('Menüpunkt wurde hinzugefügt')
   } catch (err) {
     alert(err.message)
   }
